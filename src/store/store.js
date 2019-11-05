@@ -2,16 +2,18 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import getWeb3 from '@/store/web3instance.js';
+import { get } from '@/store/apiManager.js';
 import { gamblingManager, ETH, gamblingManagerAddress } from '@/store/contracts.js';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    web3Loaded: null,
+    web3Loaded: false,
     network: '',
     userAccounts: [], // Maybe we need use only the default account and haves a watch for if the account change
-    actualToken: ETH,
+    currencies: [],
+    actualCurrency: ETH,
     accountBalance: 0,
     houseBalance: 0
   },
@@ -71,20 +73,25 @@ export default new Vuex.Store({
     },
     async getUserBalance({ commit, state }) {
       const userAccount = state.userAccounts[0];
-      const actualToken = state.actualToken;
+      const actualCurrency = state.actualCurrency;
       const gamblingManagerInstance = await gamblingManager();
 
-      const balance = await gamblingManagerInstance.methods.balanceOf(userAccount, actualToken).call();
+      const balance = await gamblingManagerInstance.methods.balanceOf(userAccount, actualCurrency).call();
       const stringBalance = balance.toString();
       commit('setState', { accountBalance: stringBalance });
     },
     async getHouseBalance({ commit, state }) {
-      const actualToken = state.actualToken;
+      const actualCurrency = state.actualCurrency;
       const gamblingManagerInstance = await gamblingManager();
 
-      const balance = await gamblingManagerInstance.methods.balanceOf(gamblingManagerAddress, actualToken).call();
+      const balance = await gamblingManagerInstance.methods.balanceOf(gamblingManagerAddress, actualCurrency).call();
       const stringBalance = balance.toString();
       commit('setState', { houseBalance: stringBalance });
+    },
+    async getCurrencies({ commit }) {
+      const currencies = await get('currencies/');
+
+      commit('setState', { currencies: currencies });
     }
   }
 });
