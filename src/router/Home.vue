@@ -6,69 +6,15 @@
           Eth gambling
         </h1>
       </div>
-
       <div class="container">
         <div class="row">
-          <div class="col-sm-4">
-            <div
-              class="card"
-              style="width: 18rem;"
-            >
-              <img
-                class="card-img-top"
-                src="@/assets/logo.png"
-                alt="Card image cap"
-              >
-              <div class="card-body">
-                <router-link
-                  to="/coinFlip"
-                  class="btn btn-primary"
-                >
-                  Coin Flip
-                </router-link>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div
-              class="card"
-              style="width: 18rem;"
-            >
-              <img
-                class="card-img-top"
-                src="@/assets/logo.png"
-                alt="Card image cap"
-              >
-              <div class="card-body">
-                <router-link
-                  to="/"
-                  class="btn btn-primary"
-                >
-                  P2P
-                </router-link>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div
-              class="card"
-              style="width: 18rem;"
-            >
-              <img
-                class="card-img-top"
-                src="@/assets/logo.png"
-                alt="Card image cap"
-              >
-              <div class="card-body">
-                <router-link
-                  to="/"
-                  class="btn btn-primary"
-                >
-                  Massive
-                </router-link>
-              </div>
-            </div>
-          </div>
+          <AppBet
+            v-for="bet in $store.state.bets"
+            :id="bet.id"
+            :key="bet.id"
+            :model="bet.model"
+            :token="bet.token"
+          />
         </div>
       </div>
     </div>
@@ -78,4 +24,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import AppBet from '../components/AppBet';
+
+export default {
+  components: {
+    AppBet: AppBet,
+  },
+  async mounted() {
+    await this.getBets();
+  },
+  methods: {
+    ...mapActions(['getBets'])
+  }
+};
 </script>

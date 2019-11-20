@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 
 import getWeb3 from '@/store/web3instance.js';
 import { get } from '@/store/apiManager.js';
-import { gamblingManager, ETH, gamblingManagerAddress } from '@/store/contracts.js';
+import { gamblingManager, gamblingManagerAddress } from '@/store/contracts.js';
 
 Vue.use(Vuex);
 
@@ -13,9 +13,10 @@ export default new Vuex.Store({
     network: '',
     userAccounts: [], // Maybe we need use only the default account and haves a watch for if the account change
     currencies: [],
-    actualCurrency: ETH,
+    actualCurrency: null,
     accountBalance: 0,
-    houseBalance: 0
+    houseBalance: 0,
+    bets: [],
   },
   getters: {
     logged: state => state.userAccounts.length > 0,
@@ -92,6 +93,11 @@ export default new Vuex.Store({
       const currencies = await get('currencies/');
 
       commit('setState', { currencies: currencies });
+    },
+    async getBets({ commit }) {
+      const bets = await get('bets/');
+
+      commit('setState', { bets: bets });
     }
   }
 });
