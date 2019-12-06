@@ -1,140 +1,149 @@
 <template>
-  <div class="container mx-auto">
+  <div class="container col-md-3">
     <div
       v-if="$store.state.network && $store.state.network !== 'ropsten'"
-      class="h-screen w-full flex flex-col items-center justify-center bg-teal-lightest font-sans"
-      style="    z-index: 3;top: 0;position: fixed;background: #eee;left: 0;"
+      class=""
+      style=""
     >
-      <div class="h-screen w-full absolute flex items-center justify-center bg-modal">
-        <div class="bg-white max-w-sm mx-auto rounded overflow-hidden shadow-lg">
-          <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2">
-              Conectese a Ropsten
-            </div>
-            <p class="text-gray-700 text-base">
-              Metamask esta conectado a {{ $store.state.network }}, para que todo funcione correctamente conectese a Ropsten
-            </p>
-          </div>
+      <div class="px-6 py-4">
+        Conectese a Ropsten
+      </div>
+      <p class="">
+        Metamask esta conectado a {{ $store.state.network }}, para que todo funcione correctamente conectese a Ropsten
+      </p>
+    </div>
+
+    <form
+      v-if="ready"
+      class=""
+    >
+      <h1 class="py-4 text-center">
+        Coin Flip
+      </h1>
+      <div class="form-group">
+        <label
+          for="betAmountInput"
+          class="px-2"
+        >Amount to Gambling:</label>
+        <input
+          id="betAmountInput"
+          type="number"
+          placeholder="Amount"
+        >
+        <span class="px-2">{{ }}</span>
+      </div>
+      <div class="form-group">
+        <label
+          for="betAmountInput"
+          class="px-2"
+        >Possibilities:</label>
+        <select
+          v-model="possibilities"
+          class=""
+          name="possibilities"
+        >
+          <option
+            value="2"
+            disabled
+            selected
+          >
+            bet possibilities
+          </option>
+          <option value="2">
+            2
+          </option>
+        </select>
+      </div>
+
+
+
+      <div class="">
+        <div class="">
+          <label
+            class=""
+          >
+            Lucky number
+          </label>
+        </div>
+        <div class="">
+          <select
+            v-model="luckyNumbers"
+            class=""
+            name="luckyNumbers"
+          >
+            <option
+              value=""
+              disabled
+              selected
+            >
+              lucky number
+            </option>
+            <option value="0">
+              0
+            </option>
+            <option value="1">
+              1
+            </option>
+          </select>
         </div>
       </div>
-    </div>
-    <div v-if="ready">
-      <div class="bg-white md:w-1/2 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div class="pt-2">
-          <a
-            class="inline-block text-sm px-2 py-2 leading-none border rounded text-black mt-4 lg:mt-0"
-          >Your balance: {{ $store.state.accountBalance }} ETH</a>
-        </div>
-        <div class="pt-2">
-          <a
-            class="inline-block text-sm px-2 py-2 leading-none border rounded text-black mt-4 lg:mt-0"
-          >House balance: {{ $store.state.houseBalance }} ETH</a>
+      <div class="">
+        <div class="">
+          <button
+            class=""
+            type="button"
+            @click="play"
+          >
+            Play
+          </button>
         </div>
       </div>
-      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 md:w-3/4">
-        <div class="md:flex md:items-center justify-center mb-2">
-          <div class="md:w-1/4">
-            <label
-              class="block text-black font-bold md:text-center mb-1 md:mb-0 pr-4"
-              for="inline-full-name"
-            >
-              Amount
-            </label>
-          </div>
-          <div class="md:w-2/4">
-            <input
-              v-model="amount"
-              class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              type="number"
-              placeholder="bet amount in WEI"
-            >
-          </div>
-        </div>
-        <div class="md:flex md:items-center justify-center mb-2">
-          <div class="md:w-1/4">
-            <label
-              class="block text-black font-bold md:text-center mb-1 md:mb-0 pr-4"
-              for="inline-username"
-            >
-              Possibilities
-            </label>
-          </div>
-          <div class="md:w-2/4">
-            <select
-              v-model="possibilities"
-              class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              name="possibilities"
-            >
-              <option
-                value="2"
-                disabled
-                selected
-              >
-                bet possibilities
-              </option>
-              <option value="2">
-                2
-              </option>
-            </select>
-          </div>
-        </div>
-        <div class="md:flex md:items-center justify-center mb-2">
-          <div class="md:w-1/4">
-            <label
-              class="block text-black font-bold md:text-center mb-1 md:mb-0 pr-4"
-              for="inline-username"
-            >
-              Lucky number
-            </label>
-          </div>
-          <div class="md:w-2/4">
-            <select
-              v-model="luckyNumbers"
-              class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              name="luckyNumbers"
-            >
-              <option
-                value=""
-                disabled
-                selected
-              >
-                lucky number
-              </option>
-              <option value="0">
-                0
-              </option>
-              <option value="1">
-                1
-              </option>
-            </select>
-          </div>
-        </div>
-        <div class="md:flex md:items-center justify-end">
-          <div class="md:w-1/4">
-            <button
-              class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-              type="button"
-              @click="play"
-            >
-              Play
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+
+
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input
+          id="exampleInputPassword1"
+          type="password"
+          class="form-control"
+          placeholder="Password"
+        >
+      </div>
+      <div class="form-group form-check">
+        <input
+          id="exampleCheck1"
+          type="checkbox"
+          class="form-check-input"
+        >
+        <label
+          class="form-check-label"
+          for="exampleCheck1"
+        >Check me out</label>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary"
+      >
+        Submit
+      </button>
+    </form>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 import { gamblingManager, toData } from '@/store/contracts.js';
+// import { get } from '@/store/apiManager.js';
 
 let gamblingManagerContract = null;
 
 export default {
   data() {
     return {
-      luckyNumbers: '',
+      betId: null,
+      bet: null,
       possibilities: '',
+      multiplier: '',
+      luckyNumbers: '',
       amount: ''
     };
   },
@@ -154,6 +163,10 @@ export default {
         gamblingManagerContract = contract;
       });
     }
+  },
+  async mounted() {
+    // let bet = await get('bet/' + betId);
+    // console.log(bet);
   },
   methods: {
     async play() {

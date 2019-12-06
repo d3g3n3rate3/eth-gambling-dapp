@@ -1,27 +1,23 @@
-import web3instance from './web3instance';
+import { w3 } from '@/store/w3.js';
 import CoinFlipABI from './abi/CoinFlip.json';
 import GamblingManagerABI from './abi/GamblingManager.json';
 
-export const coinFlipAddress = '0xA6ff317b10b07360c56fA5B2B42F91C7B6b77E64';
-export const gamblingManagerAddress = '0x1654F07d008ba7b3683C575BDBC97C90d3c1AA6f';
+export const gamblingManagerAddress = '0x734914c77665f59A1e307E9F537d8d26e3dD0CE8';// TODO get from api
+export const coinFlipAddress = '0x3e8efe70fdacf4b1e90b388007c3765c6ed4f843';// TODO get from api
 
 export async function coinFlip() {
-  const web3 = await web3instance();
-  return new web3.eth.Contract(CoinFlipABI, coinFlipAddress);
+  return new w3.eth.Contract(CoinFlipABI, coinFlipAddress);
 }
 
 export async function gamblingManager() {
-  const web3 = await web3instance();
-
-  return new web3.eth.Contract(GamblingManagerABI, gamblingManagerAddress);
+  return new w3.eth.Contract(GamblingManagerABI, gamblingManagerAddress);
 }
 
 export async function toData(...args) {
-  const web3 = await web3instance();
   let data = '0x';
 
   for (let i = 0; i < args.length; i++) {
-    data = data + web3.utils.toTwosComplement(args[i]).toString().slice(2);
+    data = data + w3.utils.toTwosComplement(args[i]).toString().slice(2);
   }
   return data;
 }

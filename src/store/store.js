@@ -1,26 +1,27 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import getWeb3 from '@/store/web3instance.js';
-import { get } from '@/store/apiManager.js';
-import { gamblingManager, gamblingManagerAddress } from '@/store/contracts.js';
+import { instanceW3, toChecksumAddress } from '@/store/w3.js';
+import { get, getUser } from '@/store/apiManager.js';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    web3Loaded: false,
     network: '',
-    userAccounts: [], // Maybe we need use only the default account and haves a watch for if the account change
-    currencies: [],
-    actualCurrency: null,
-    accountBalance: 0,
-    houseBalance: 0,
-    bets: [],
+    currencies: [],// TODO move?
+    actualCurrency: '0x',// TODO move?
+    bets: [], // TODO move?
+    user: {
+      account: null,
+      w3Instance: null,
+      balances: [],
+      bets: [],
+    }
   },
   getters: {
-    logged: state => state.userAccounts.length > 0,
-    ready: state => state.userAccounts.length > 0 && state.network === 'ropsten'
+    logged: state => state.user.account, // TODO
+    ready: state => state.user.account && state.network === 'ropsten'
   },
   mutations: {
     setState(localState, data) {
@@ -38,66 +39,64 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async initUser({ commit, state, dispatch }) {
-      let web3 = window.web3;
+    async initUser({ commit, dispatch, state }) {
+      let w3 = window.web3;
 
-      if (state.web3Loaded) {
+      if (state.user.w3Instance) {
         console.log('web3');
-        web3 = await getWeb3();
+        w3 = await instanceW3();
       }
 
-      web3.eth.getAccounts(async (err, accounts) => {
+      w3.eth.getAccounts(async (err, accounts) => {
         if (err) {
           console.error('web3 error', err);
         }
 
         if (!state.web3Loaded && accounts && accounts.length > 0) {
-          web3 = await getWeb3();
+          w3 = await instanceW3();
           commit('setState', { web3Loaded: true });
         }
 
         // a esta altura web3 es la web3 ver 1.0
-        const network = await web3.eth.net.getNetworkType();
-        commit('setState', { network, userAccounts: accounts });
-        await dispatch('getUserBalance');
-        await dispatch('getHouseBalance');
+        const network = await w3.eth.net.getNetworkType();
+        const user = { account: toChecksumAddress(accounts[0]) };
+        await commit('setState', { network, user: user });
+        // Set user
+        await dispatch('getUser');
       });
     },
     async loginUser({ commit, dispatch }) {
       try {
-        await getWeb3();
+        await instanceW3();
         commit('setState', { web3Loaded: true });
         await dispatch('initUser');
       } catch (e) {
         console.error(e);
       }
     },
-    async getUserBalance({ commit, state }) {
-      const userAccount = state.userAccounts[0];
-      const actualCurrency = state.actualCurrency;
-      const gamblingManagerInstance = await gamblingManager();
-
-      const balance = await gamblingManagerInstance.methods.balanceOf(userAccount, actualCurrency).call();
-      const stringBalance = balance.toString();
-      commit('setState', { accountBalance: stringBalance });
-    },
-    async getHouseBalance({ commit, state }) {
-      const actualCurrency = state.actualCurrency;
-      const gamblingManagerInstance = await gamblingManager();
-
-      const balance = await gamblingManagerInstance.methods.balanceOf(gamblingManagerAddress, actualCurrency).call();
-      const stringBalance = balance.toString();
-      commit('setState', { houseBalance: stringBalance });
-    },
     async getCurrencies({ commit }) {
-      const currencies = await get('currencies/');
+      const currencies = [{ symbol: 'ALL' }].concat(await get('currencies/'));
 
       commit('setState', { currencies: currencies });
     },
-    async getBets({ commit }) {
-      const bets = await get('bets/');
+    async getUser({ commit, state }) {
+      const user = await getUser(state.user.account);
+
+      commit('setState', { user: user });
+    },
+    async getBets({ commit, state }) {
+      let bets = await get('bets/');
+
+      if (state.actualCurrency !== '0x')
+        bets = bets.filter(x => x.token === state.actualCurrency);
 
       commit('setState', { bets: bets });
-    }
+    },
+    async setCurrency({ commit, currency }) {
+      // TODO getCurrencies
+      //await get('currencies/')
+
+      commit('setState', { actualCurrency: currency });
+    },
   }
 });

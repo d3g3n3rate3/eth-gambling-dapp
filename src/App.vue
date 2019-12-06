@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import TheHeader from './components/TheHeader';
+import TheHeader from '@/components/TheHeader';
 
 export default {
   name: 'App',
@@ -12,3 +12,15 @@ export default {
   },
 };
 </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+
+html, body {
+  font-family: 'Roboto Mono', sans-serif;
+}
+
+#app {
+  font-family: 'Roboto Mono', sans-serif;
+}
+</style>

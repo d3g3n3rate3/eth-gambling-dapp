@@ -9,20 +9,24 @@
         alt="Card image cap"
       >
       <li>
-        {{ id }}
+        {{ bet.id }}
       </li>
       <li>
-        {{ model }}
+        {{ bet.model }}
       </li>
       <li>
-        {{ token }}
+        {{ bet.token }}
       </li>
       <div class="card-body">
         <router-link
-          to="/coinFlip"
+          to="/coin_flip/"
+          +
+          {{
+          $route.params.id
+          }}
           class="btn btn-primary"
         >
-          BLA
+          Select
         </router-link>
       </div>
     </div>
@@ -33,20 +37,9 @@
 export default {
   name: 'AppBet',
   props: {
-    id: {
-      type: String,
+    bet: {
+      type: Object,
       required: true,
-      default: '',
-    },
-    model: {
-      type: String,
-      required: true,
-      default: '',
-    },
-    token: {
-      type: String,
-      required: true,
-      default: '',
     },
   },
   methods: {

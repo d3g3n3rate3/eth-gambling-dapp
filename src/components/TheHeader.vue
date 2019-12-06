@@ -5,16 +5,26 @@
         id="navbarSupportedContent"
         class="collapse navbar-collapse"
       >
+        <router-link
+          v-if="logged"
+          to="/"
+          tag="button"
+        >
+          Eth gambling
+        </router-link>
         <ul class="navbar-nav mr-auto" />
-        <form class="form-inline my-2 my-lg-0">
+        <form class="form-inline my-lg-0">
           <div class="px-3">
-            <select class="p-2">
-              <option> ALL </option>
+            <!--TODO fix this(click.stop, its correct???)-->
+            <select
+              class="p-2"
+              @click.stop="setCurrency({currency: 'bla'})"
+            >
               <option
-                v-for="choice in $store.state.currencies"
-                :key="choice.address"
+                v-for="currency in $store.state.currencies"
+                :key="currency.address"
               >
-                {{ choice.symbol }}
+                {{ currency.symbol }}
               </option>
             </select>
           </div>
@@ -22,17 +32,19 @@
             v-if="!logged"
             type="button"
             class="btn btn-outline-success"
-            href="#"
+            href="/"
             @click.stop="loginUser()"
           >
             Login
           </button>
-          <div
+          <router-link
             v-if="logged"
-            class="px-3 text-black"
+            class="btn btn-outline-success"
+            to="/profile"
+            tag="button"
           >
-            {{ $store.state.userAccounts[0] }}
-          </div>
+            Profile
+          </router-link>
         </form>
       </div>
     </nav>
@@ -50,8 +62,7 @@ export default {
       loaded: false,
       error: '',
       user: {
-        account: null,
-        balance: 0
+        account: null
       }
     };
   },
@@ -69,7 +80,7 @@ export default {
     await this.getCurrencies();
   },
   methods: {
-    ...mapActions(['initUser', 'loginUser', 'getCurrencies'])
+    ...mapActions(['initUser', 'loginUser', 'getCurrencies', 'setCurrency']),
   }
 };
 </script>
