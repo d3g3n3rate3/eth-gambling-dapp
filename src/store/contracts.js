@@ -1,9 +1,18 @@
 import { w3 } from '@/store/w3.js';
-import CoinFlipABI from './abi/CoinFlip.json';
 import GamblingManagerABI from './abi/GamblingManager.json';
 
-export const gamblingManagerAddress = '0x734914c77665f59A1e307E9F537d8d26e3dD0CE8';// TODO get from api
+import CoinFlipABI from './abi/CoinFlip.json';
+import P2P from './abi/P2P.json';
+
+export const gamblingManagerAddress = '0xf4c0b61a4b8e8D2900a56e8CbdD144D73EB59a26';// TODO get from api
+
+// Models
+export const p2pAddress = '0x51371229375dD1D6F040365f3ac46A42003f2A09';// TODO get from api
 export const coinFlipAddress = '0x3e8efe70fdacf4b1e90b388007c3765c6ed4f843';// TODO get from api
+
+export async function p2p() {
+  return new w3.eth.Contract(P2P, p2pAddress);
+}
 
 export async function coinFlip() {
   return new w3.eth.Contract(CoinFlipABI, coinFlipAddress);
