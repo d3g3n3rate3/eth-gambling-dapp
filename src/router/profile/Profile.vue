@@ -8,9 +8,6 @@
         <thead>
           <tr class="bg-primary">
             <th scope="col">
-              Symbol
-            </th>
-            <th scope="col">
               Name
             </th>
             <th scope="col">
@@ -27,26 +24,23 @@
             :key="balance.address"
           >
             <th scope="row">
-              {{ balance.iconUrl }} {{ balance.symbol }}
+              {{ balance.iconUrl }} {{ balance.name }}
             </th>
-            <td>
-              {{ balance.name }}
-            </td>
             <td>
               {{ balance.formatAmount }}
             </td>
             <td>
               <a
                 href="#"
-                class="px-2 stretched-link"
+                class="px-2 link"
               >Play</a>
               <a
                 href="#"
-                class="px-2 stretched-link"
+                class="px-2 link"
               >Deposit</a>
               <a
                 href="#"
-                class="px-2 stretched-link"
+                class="px-2 link"
               >Withdraw</a>
             </td>
           </tr>

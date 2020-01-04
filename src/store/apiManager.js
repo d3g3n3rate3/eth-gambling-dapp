@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { toFormat } from '@/store/w3.js';
+import { toFormat } from '@/utils.js';
 
 const urlBase = 'https://eth-gambling-api.herokuapp.com/';
+//const urlBase = 'http://localhost:5000/';
 
 export async function get(path) {
   const url = urlBase + path;
@@ -26,7 +27,7 @@ export async function getUser(address) {
     balance.iconUrl = currency.iconUrl;
     balance.symbol = currency.symbol;
     balance.name = currency.name;
-    balance.formatAmount = toFormat(balance.amount);
+    balance.formatAmount = toFormat(balance.amount, currency.symbol);
 
     return balance;
   });

@@ -32,36 +32,3 @@ export function w3() {
 export function toChecksumAddress(address) {
   return W3.utils.toChecksumAddress(address);
 }
-
-export function toFormat(x, maxDigits = 9) {
-  function cutZeros(x) {
-    let zeros = 0;
-    for (let i = x.length; i > 0; i--)
-      if (x[i] === '0')
-        zeros++;
-
-    return x.slice(0, x.length - zeros);
-  }
-
-  if (x.length <= maxDigits) // aprox 0
-    return x + ' WEI';
-
-  const ethLength = 18;
-
-  if (x.length <= ethLength) {
-    const zeros = '0'.repeat(ethLength - x.length);
-
-    return '0.' + zeros + cutZeros(x.slice(0, zeros.length - maxDigits));
-  }
-
-  const intPart = x.slice(0, x.length - ethLength);
-
-  if (maxDigits - intPart.length > 0) {
-    const decPartLength =  maxDigits - intPart.length;
-    const decPart = '.' + cutZeros(x.slice(0, decPartLength));
-
-    return intPart + decPart;
-  }
-
-  return intPart;
-}
